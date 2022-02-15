@@ -1,21 +1,29 @@
 #include <iostream>
 #include "SteamAPI_Manager.h"
+#include "GameManager.h"
 #include <windows.h>
 
 
 int main()
 {
-	SteamAPI_Manager SteamAPIManager;
+	SteamAPI_Manager steamAPIManager;
+	GameManager gameManager;
 
-	if (SteamAPIManager.Init())
+	if (steamAPIManager.Init())
 	{
-		printf_s(" Success");
+		gameManager.SetSteamManager(&steamAPIManager);
+		gameManager.Update();
+		// std::cout << "Success" << std::endl;
 	}
 	else {
-		printf_s(" Fail");
+		// std::cout << "Fail" << std::endl;
 	}
 
-	Sleep(50000);
+	Sleep(10000);
+
+	steamAPIManager.Quit();
+
+	Sleep(6000);
 
 	return 1;
 }

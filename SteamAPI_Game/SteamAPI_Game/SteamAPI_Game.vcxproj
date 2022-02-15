@@ -25,10 +25,12 @@
     <Library Include="steam_api.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SteamAPI_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="SteamAPI_Manager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
