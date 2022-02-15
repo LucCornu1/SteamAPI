@@ -38,6 +38,21 @@ void GameManager::OnFriendStatusChanged(PersonaStateChange_t* pCallback)
     }
 
     std::cout << friendName << " status is now " << friendStatus << " !" << std::endl;
+
+    // Getting player count
+    SteamAPICall_t hSteamAPICall = SteamUserStats()->GetNumberOfCurrentPlayers();
+    m_NumberOfCurrentPlayersCallResult.Set(hSteamAPICall, this, &GameManager::OnGetNumberOfCurrentPlayer);
+}
+
+void GameManager::OnGetNumberOfCurrentPlayer(NumberOfCurrentPlayers_t* pCallback, bool bIOFailure)
+{
+    if (bIOFailure || !pCallback->m_bSuccess)
+    {
+        std::cout << "Error : NumberOfCurrentPlayers_t failed" << std::endl;
+        return;
+    }
+
+    std::cout << "Numbers of players currently playing : " << pCallback->m_cPlayers << std::endl << std::endl;
 }
 
 GameManager::GameManager()

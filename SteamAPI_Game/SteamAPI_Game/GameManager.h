@@ -8,6 +8,9 @@ private:
 
     STEAM_CALLBACK(GameManager, OnFriendStatusChanged, PersonaStateChange_t);
 
+    void OnGetNumberOfCurrentPlayer(NumberOfCurrentPlayers_t* pCallback, bool bIOFailure);
+    CCallResult<GameManager, NumberOfCurrentPlayers_t> m_NumberOfCurrentPlayersCallResult;
+
     // void OnFriendStatusChanged(PersonaStateChange_t* pCallback); // Inutile
 
 public:
