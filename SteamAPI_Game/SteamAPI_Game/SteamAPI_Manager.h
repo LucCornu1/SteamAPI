@@ -11,9 +11,9 @@ private:
 
 public:
 	SteamAPI_Manager();
+	~SteamAPI_Manager();
 
 	bool Init();
-	void Quit();
 	void Update();
 	void GetFriends();
 };

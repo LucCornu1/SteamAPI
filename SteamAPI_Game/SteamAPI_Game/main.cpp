@@ -19,11 +19,7 @@ int main()
 		// std::cout << "Fail" << std::endl;
 	}
 
-	Sleep(10000);
-
-	steamAPIManager.Quit();
-
-	Sleep(6000);
+	Sleep(16000);
 
 	return 1;
 }

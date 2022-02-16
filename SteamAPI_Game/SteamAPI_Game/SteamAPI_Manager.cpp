@@ -5,6 +5,12 @@ SteamAPI_Manager::SteamAPI_Manager()
 	// Nothing
 }
 
+SteamAPI_Manager::~SteamAPI_Manager()
+{
+	std::cout << "Exiting steam..." << std::endl;
+	SteamAPI_Shutdown();
+}
+
 bool SteamAPI_Manager::Init()
 {
 	if (SteamAPI_RestartAppIfNecessary(k_uAppIdInvalid))
@@ -47,12 +53,6 @@ bool SteamAPI_Manager::Init()
 	std::cout << "User Name : " << name << std::endl;
 
 	return true;
-}
-
-void SteamAPI_Manager::Quit()
-{
-	std::cout << "Exiting steam..." << std::endl;
-	SteamAPI_Shutdown();
 }
 
 void SteamAPI_Manager::Update()

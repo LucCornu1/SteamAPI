@@ -55,9 +55,46 @@ void GameManager::OnGetNumberOfCurrentPlayer(NumberOfCurrentPlayers_t* pCallback
     std::cout << "Numbers of players currently playing : " << pCallback->m_cPlayers << std::endl << std::endl;
 }
 
+void GameManager::OnGetLobbyMatchList(LobbyMatchList_t* pCallback, bool bIOFailure)
+{
+    if (bIOFailure)
+    {
+        std::cout << "Error : LobbyMatchList_t failed" << std::endl;
+        bSearching = false;
+        return;
+    }
+
+    std::cout << "Number of lobbies matching : " << pCallback->m_nLobbiesMatching << std::endl;
+
+   for (int i = 0; i < pCallback->m_nLobbiesMatching; i++)
+   {
+       CSteamID LobbyID = SteamMatchmaking()->GetLobbyByIndex(i);
+       if (LobbyID.IsLobby())
+       {
+           std::cout << "Lobby number : " << i << std::endl;
+           SteamAPICall_t hSteamAPICall = SteamMatchmaking()->JoinLobby(LobbyID);
+           m_LobbyEnterCallResult.Set(hSteamAPICall, this, &GameManager::OnLobbyEntered);
+           break;
+       }
+   }
+}
+
+void GameManager::OnLobbyEntered(LobbyEnter_t* pCallback, bool bIOFailure)
+{
+    int nb = SteamMatchmaking()->GetNumLobbyMembers(pCallback->m_ulSteamIDLobby);
+    for (int i = 0; i < nb; i++)
+    {
+        CSteamID UserID = SteamMatchmaking()->GetLobbyMemberByIndex(pCallback->m_ulSteamIDLobby, i);
+
+        const char* userName = SteamFriends()->GetFriendPersonaName(UserID);
+        std::cout << "User Name : " << userName << std::endl;
+    }
+}
+
 GameManager::GameManager()
 {
     bRunning = true;
+    bSearching = false;
     pSteamManager = nullptr;
 }
 
@@ -75,5 +112,14 @@ void GameManager::Update()
             pSteamManager->Update();
             pSteamManager->GetFriends();
         }
+
+        if (!bSearching)
+        {
+            bSearching = true;
+            SteamAPICall_t hSteamAPICall = SteamMatchmaking()->RequestLobbyList();
+            m_LobbyMatchListCallResult.Set(hSteamAPICall, this, &GameManager::OnGetLobbyMatchList);
+        }
+
+        // SteamAPI_ManualDispatch_Init();
     }
 }
