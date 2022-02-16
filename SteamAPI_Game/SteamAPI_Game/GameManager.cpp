@@ -69,7 +69,7 @@ void GameManager::OnGetLobbyMatchList(LobbyMatchList_t* pCallback, bool bIOFailu
    for (int i = 0; i < pCallback->m_nLobbiesMatching; i++)
    {
        CSteamID LobbyID = SteamMatchmaking()->GetLobbyByIndex(i);
-       if (LobbyID.IsLobby() && SteamMatchmaking()->GetNumLobbyMembers(LobbyID) > 3)
+       if (LobbyID.IsLobby() && SteamMatchmaking()->GetNumLobbyMembers(LobbyID) > 4)
        {
            std::cout << "Lobby number : " << i << std::endl;
            SteamAPICall_t hSteamAPICall = SteamMatchmaking()->JoinLobby(LobbyID);
@@ -88,6 +88,9 @@ void GameManager::OnLobbyEntered(LobbyEnter_t* pCallback, bool bIOFailure)
 
         const char* userName = SteamFriends()->GetFriendPersonaName(UserID);
         std::cout << "User Name : " << userName << std::endl;
+
+        const char* oldUserName = SteamFriends()->GetFriendPersonaNameHistory(UserID, 0);
+        std::cout << "Old User Name : " << oldUserName << std::endl;
     }
 }
 
