@@ -69,7 +69,7 @@ void GameManager::OnGetLobbyMatchList(LobbyMatchList_t* pCallback, bool bIOFailu
    for (int i = 0; i < pCallback->m_nLobbiesMatching; i++)
    {
        CSteamID LobbyID = SteamMatchmaking()->GetLobbyByIndex(i);
-       if (LobbyID.IsLobby())
+       if (LobbyID.IsLobby() && SteamMatchmaking()->GetNumLobbyMembers(LobbyID) > 3)
        {
            std::cout << "Lobby number : " << i << std::endl;
            SteamAPICall_t hSteamAPICall = SteamMatchmaking()->JoinLobby(LobbyID);
