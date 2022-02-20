@@ -44,6 +44,11 @@ void GameManager::OnFriendStatusChanged(PersonaStateChange_t* pCallback)
     m_NumberOfCurrentPlayersCallResult.Set(hSteamAPICall, this, &GameManager::OnGetNumberOfCurrentPlayer);
 }
 
+void GameManager::OnLobbyEntered(LobbyEnter_t* pCallback)
+{
+    std::cout << "You've entered a lobby" << std::endl;
+}
+
 void GameManager::OnGetNumberOfCurrentPlayer(NumberOfCurrentPlayers_t* pCallback, bool bIOFailure)
 {
     if (bIOFailure || !pCallback->m_bSuccess)
@@ -69,14 +74,17 @@ void GameManager::OnGetLobbyMatchList(LobbyMatchList_t* pCallback, bool bIOFailu
    for (int i = 0; i < pCallback->m_nLobbiesMatching; i++)
    {
        CSteamID LobbyID = SteamMatchmaking()->GetLobbyByIndex(i);
-       if (LobbyID.IsLobby() && SteamMatchmaking()->GetNumLobbyMembers(LobbyID) > 4)
+       if (LobbyID.IsLobby() && SteamMatchmaking()->GetNumLobbyMembers(LobbyID) > 1)
        {
            std::cout << "Lobby number : " << i << std::endl;
            SteamAPICall_t hSteamAPICall = SteamMatchmaking()->JoinLobby(LobbyID);
            m_LobbyEnterCallResult.Set(hSteamAPICall, this, &GameManager::OnLobbyEntered);
-           break;
+           return;
        }
    }
+
+   SteamAPICall_t hSteamAPICall = SteamMatchmaking()->CreateLobby(k_ELobbyTypeFriendsOnly, 1);
+   m_LobbyCreatedCallResult.Set(hSteamAPICall, this, &GameManager::OnLobbyCreated);
 }
 
 void GameManager::OnLobbyEntered(LobbyEnter_t* pCallback, bool bIOFailure)
@@ -92,6 +100,11 @@ void GameManager::OnLobbyEntered(LobbyEnter_t* pCallback, bool bIOFailure)
         const char* oldUserName = SteamFriends()->GetFriendPersonaNameHistory(UserID, 0);
         std::cout << "Old User Name : " << oldUserName << std::endl;
     }
+}
+
+void GameManager::OnLobbyCreated(LobbyCreated_t* pCallback, bool bIOFailure)
+{
+    std::cout << "Lobby created !" << std::endl;
 }
 
 GameManager::GameManager()
